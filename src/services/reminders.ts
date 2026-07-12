@@ -1,6 +1,7 @@
 import * as Notifications from 'expo-notifications';
 
 const CHANNEL_ID = 'daily-reminder';
+const DAILY_IDENTIFIER = 'warden-daily-nudge';
 const REMINDER_HOUR = 21;
 
 /**
@@ -18,9 +19,10 @@ export async function enableDailyReminder(): Promise<boolean> {
 
   await disableDailyReminder(); // avoid duplicate schedules
   await Notifications.scheduleNotificationAsync({
+    identifier: DAILY_IDENTIFIER,
     content: {
       title: 'Warden',
-      body: "Log today's spends — it takes 5 seconds.",
+      body: 'Bought something today? Snap the receipt before it fades.',
     },
     trigger: {
       type: Notifications.SchedulableTriggerInputTypes.DAILY,
@@ -32,6 +34,7 @@ export async function enableDailyReminder(): Promise<boolean> {
   return true;
 }
 
+// Cancel only the daily nudge — item deadline reminders must survive this toggle.
 export async function disableDailyReminder(): Promise<void> {
-  await Notifications.cancelAllScheduledNotificationsAsync();
+  await Notifications.cancelScheduledNotificationAsync(DAILY_IDENTIFIER).catch(() => {});
 }
