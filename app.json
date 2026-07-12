@@ -11,7 +11,7 @@
       "package": "com.tejas.warden",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#D9482B"
+        "backgroundColor": "#16423C"
       },
       "permissions": [
         "android.permission.CAMERA"
