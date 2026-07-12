@@ -3,7 +3,7 @@ import { openDatabaseSync } from 'expo-sqlite';
 
 import * as schema from './schema';
 
-const DB_NAME = 'receiptly.db';
+const DB_NAME = 'warden.db';
 
 const sqlite = openDatabaseSync(DB_NAME, { enableChangeListener: true });
 

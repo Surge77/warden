@@ -1,7 +1,7 @@
 import { File, Paths } from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 
-const FILE_NAME = 'receiptly-expenses.csv';
+const FILE_NAME = 'warden-items.csv';
 const MIME_TYPE = 'text/csv';
 
 /** Write the CSV to the cache dir and open the system share sheet. No-op if sharing is unavailable. */

@@ -63,3 +63,41 @@ export function planReminders(input: WarrantyInput, nowMs: number): ReminderPlan
     .filter((entry) => entry.fireAtMs > nowMs)
     .sort((a, b) => a.fireAtMs - b.fireAtMs);
 }
+
+/** Warranty expiring within this many days counts as "expiring soon" on the dashboard. */
+export const EXPIRING_SOON_DAYS = 30;
+
+export interface ProtectionSummary {
+  protectedCount: number;
+  protectedValueMinor: number;
+  expiringSoonCount: number;
+}
+
+interface ProtectableItem {
+  amountMinor: number;
+  spentAt: number;
+  warrantyMonths: number | null;
+}
+
+/** Dashboard rollup: how much purchase value is still under warranty. Pure. */
+export function protectionSummary(
+  items: readonly ProtectableItem[],
+  nowMs: number,
+): ProtectionSummary {
+  let protectedCount = 0;
+  let protectedValueMinor = 0;
+  let expiringSoonCount = 0;
+
+  for (const item of items) {
+    const expiry = warrantyExpiryMs({
+      purchaseDateMs: item.spentAt,
+      warrantyMonths: item.warrantyMonths,
+    });
+    if (expiry === null || expiry <= nowMs) continue;
+    protectedCount += 1;
+    protectedValueMinor += item.amountMinor;
+    if (expiry - nowMs <= EXPIRING_SOON_DAYS * DAY_MS) expiringSoonCount += 1;
+  }
+
+  return { protectedCount, protectedValueMinor, expiringSoonCount };
+}

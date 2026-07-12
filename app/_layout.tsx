@@ -52,7 +52,7 @@ export default function RootLayout() {
           contentStyle: { backgroundColor: paper.bg },
         }}
       >
-        <Stack.Screen name="index" options={{ title: 'RECEIPTLY' }} />
+        <Stack.Screen name="index" options={{ title: 'WARDEN' }} />
         <Stack.Screen name="quick-add" options={{ title: 'QUICK ADD' }} />
         <Stack.Screen name="capture" options={{ title: 'CAPTURE' }} />
         <Stack.Screen name="review" options={{ title: 'REVIEW' }} />

@@ -8,6 +8,7 @@ import { useToast } from '@/components/toast';
 import { db, schema } from '@/db/client';
 import { monthKey } from '@/lib/date';
 import { formatINR } from '@/lib/money';
+import { returnDeadlineMs, warrantyExpiryMs } from '@/lib/warranty';
 import { createExpenseRepository } from '@/services/expense-repository';
 import { useExpenseStore } from '@/state/expense-store';
 import { layout, mono, paper, type } from '@/theme';
@@ -64,6 +65,9 @@ export default function ExpenseDetailScreen() {
               note: snapshot.note,
               imageUri: snapshot.imageUri,
               rawOcrText: snapshot.rawOcrText,
+              itemName: snapshot.itemName,
+              returnWindowDays: snapshot.returnWindowDays,
+              warrantyMonths: snapshot.warrantyMonths,
             });
           });
         },
@@ -74,13 +78,15 @@ export default function ExpenseDetailScreen() {
   return (
     <View style={styles.container}>
       <ReceiptCard>
-        <Text style={styles.cardHeading}>*** RECEIPTLY ***</Text>
-        <Text style={styles.cardSub}>EXPENSE RECORD №{String(expenseId).padStart(4, '0')}</Text>
+        <Text style={styles.cardHeading}>*** WARDEN ***</Text>
+        <Text style={styles.cardSub}>ITEM RECORD №{String(expenseId).padStart(4, '0')}</Text>
         <View style={styles.tear} />
+        {expense.itemName ? <Detail label="ITEM" value={expense.itemName.toUpperCase()} /> : null}
         <Detail label="MERCHANT" value={(expense.merchant ?? 'Unknown').toUpperCase()} />
         <Detail label="CATEGORY" value={(categoryName ?? 'Uncategorized').toUpperCase()} />
         <Detail label="DATE" value={monthKey(expense.spentAt)} />
         {expense.note ? <Detail label="NOTE" value={expense.note} /> : null}
+        <DeadlineRows expense={expense} />
         <View style={styles.tear} />
         <View style={styles.totalRow}>
           <Text style={styles.totalLabel}>TOTAL</Text>
@@ -95,6 +101,37 @@ export default function ExpenseDetailScreen() {
       </View>
     </View>
   );
+}
+
+// Countdown lines for the two protection clocks; expired/absent clocks show their state.
+function DeadlineRows({ expense }: { expense: Expense }) {
+  const now = Date.now();
+  const input = {
+    purchaseDateMs: expense.spentAt,
+    returnWindowDays: expense.returnWindowDays,
+    warrantyMonths: expense.warrantyMonths,
+  };
+  const returnDeadline = returnDeadlineMs(input);
+  const expiry = warrantyExpiryMs(input);
+  if (returnDeadline === null && expiry === null) return null;
+
+  return (
+    <>
+      {returnDeadline !== null ? (
+        <Detail label="RETURN BY" value={countdown(returnDeadline, now)} />
+      ) : null}
+      {expiry !== null ? <Detail label="WARRANTY" value={countdown(expiry, now)} /> : null}
+    </>
+  );
+}
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+function countdown(deadlineMs: number, nowMs: number): string {
+  const days = Math.ceil((deadlineMs - nowMs) / DAY_MS);
+  if (days < 0) return 'EXPIRED';
+  if (days === 0) return 'LAST DAY';
+  return `${days} DAY${days === 1 ? '' : 'S'} LEFT`;
 }
 
 function Detail({ label, value }: { label: string; value: string }) {

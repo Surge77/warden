@@ -19,7 +19,7 @@ export async function enableDailyReminder(): Promise<boolean> {
   await disableDailyReminder(); // avoid duplicate schedules
   await Notifications.scheduleNotificationAsync({
     content: {
-      title: 'Receiptly',
+      title: 'Warden',
       body: "Log today's spends — it takes 5 seconds.",
     },
     trigger: {
