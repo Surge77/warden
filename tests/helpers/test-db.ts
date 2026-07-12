@@ -6,7 +6,11 @@ import { join } from 'node:path';
 import * as schema from '@/db/schema';
 import type { AppDatabase } from '@/db/client';
 
-const MIGRATIONS = ['0000_violet_marrow.sql', '0001_overconfident_ultron.sql'];
+const MIGRATIONS = [
+  '0000_violet_marrow.sql',
+  '0001_overconfident_ultron.sql',
+  '0002_whole_blue_shield.sql',
+];
 
 /** In-memory DB with all migrations applied — mirrors the on-device schema. */
 export function makeTestDb(): AppDatabase {

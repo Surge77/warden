@@ -1,22 +1,13 @@
-import Database from 'better-sqlite3';
-import { drizzle } from 'drizzle-orm/better-sqlite3';
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
-
 import * as schema from '@/db/schema';
-import { createExpenseRepository, type AppDatabase } from '@/services/expense-repository';
+import { createExpenseRepository } from '@/services/expense-repository';
 import { isoDateToEpochMs, monthRange } from '@/lib/date';
-
-const MIGRATION = join(__dirname, '../../drizzle/0000_violet_marrow.sql');
+import { makeTestDb } from '../helpers/test-db';
 
 function makeRepo() {
-  const sqlite = new Database(':memory:');
-  const ddl = readFileSync(MIGRATION, 'utf8').replace(/-->.*statement-breakpoint/g, '');
-  sqlite.exec(ddl);
-  const db = drizzle(sqlite, { schema });
+  const db = makeTestDb();
   // Seed one category for FK references.
-  db.insert(schema.categories).values({ name: 'Food', color: '#EF4444' }).run();
-  return { repo: createExpenseRepository(db as unknown as AppDatabase), db };
+  void db.insert(schema.categories).values({ name: 'Food', color: '#EF4444' }).run();
+  return { repo: createExpenseRepository(db), db };
 }
 
 const baseExpense = (overrides = {}) => ({

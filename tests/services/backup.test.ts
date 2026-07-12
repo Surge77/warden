@@ -2,6 +2,7 @@ import { exportBackup, parseBackup, restoreBackup } from '@/services/backup';
 import { createCategoryRepository } from '@/services/category-repository';
 import { createExpenseRepository } from '@/services/expense-repository';
 import { createBudgetRepository } from '@/services/budget-repository';
+import { createReminderRepository } from '@/services/reminder-repository';
 import { makeTestDb } from '../helpers/test-db';
 
 const NOW = 1_700_000_000_000;
@@ -47,27 +48,46 @@ describe('backup', () => {
     expect(() => parseBackup('{not json')).toThrow('Not a valid backup file.');
   });
 
-  it('rejects JSON that is not a receiptly backup', () => {
+  it('rejects JSON that is not a warden backup', () => {
     expect(() => parseBackup(JSON.stringify({ app: 'other', version: 1 }))).toThrow(
-      'Not a Receiptly backup.',
+      'Not a Warden backup.',
     );
   });
 
   it('rejects backups from a newer app version', () => {
     const payload = JSON.stringify({
-      app: 'receiptly',
+      app: 'warden',
       version: 99,
       exportedAt: NOW,
       categories: [],
       expenses: [],
       budgets: [],
       merchantMemory: [],
+      reminders: [],
     });
     expect(() => parseBackup(payload)).toThrow(/newer app version/);
   });
 
   it('rejects backups with missing sections', () => {
-    const payload = JSON.stringify({ app: 'receiptly', version: 1, categories: [] });
+    const payload = JSON.stringify({ app: 'warden', version: 1, categories: [] });
     expect(() => parseBackup(payload)).toThrow('Backup file is damaged.');
+  });
+
+  it('round-trips reminders and clears stale OS notification ids', async () => {
+    const source = await seededDb();
+    const expenseRows = await createExpenseRepository(source).list();
+    const remindersRepo = createReminderRepository(source);
+    const [row] = await remindersRepo.replaceForExpense(expenseRows[0]!.id, [
+      { kind: 'expiry', fireAtMs: NOW + 1000 },
+    ]);
+    await remindersRepo.setNotificationId(row!.id, 'os-stale');
+
+    const target = makeTestDb();
+    await restoreBackup(target, parseBackup(await exportBackup(source, NOW)));
+
+    const restored = await createReminderRepository(target).listAll();
+    expect(restored).toHaveLength(1);
+    expect(restored[0]?.kind).toBe('expiry');
+    expect(restored[0]?.notificationId).toBeNull();
   });
 });
