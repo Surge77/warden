@@ -62,5 +62,7 @@ export interface ParsedReceipt {
   amountMinor: number | null;
   date: string | null; // ISO yyyy-mm-dd
   merchant: string | null;
+  /** Warranty length stated on the receipt, when detected (e.g. "1 YEAR WARRANTY"). */
+  warrantyMonths: number | null;
   confidence: FieldConfidence;
 }

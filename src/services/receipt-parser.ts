@@ -61,6 +61,7 @@ export function parse(rawText: string): ParsedReceipt {
     amountMinor: amount.value,
     date: date.value,
     merchant: merchant.value,
+    warrantyMonths: extractWarrantyMonths(rawText),
     confidence: {
       amount: amount.confidence,
       date: date.confidence,
@@ -115,6 +116,26 @@ function largestCurrencyAmount(lines: string[]): number | null {
     }
   }
   return max;
+}
+
+// "1 YEAR WARRANTY", "2 YR GUARANTEE", "WARRANTY: 12 MONTHS", "6 MONTH WARRANTY", …
+// Number-first and keyword-first orderings both appear on real receipts.
+const WARRANTY_NUMBER_FIRST =
+  /(\d{1,2})\s*(year|yr|month|mo)s?\.?\s*(?:warranty|guarantee)/i;
+const WARRANTY_KEYWORD_FIRST =
+  /(?:warranty|guarantee)\s*:?\s*(\d{1,2})\s*(year|yr|month|mo)s?\b/i;
+
+// Longest plausible consumer warranty; anything above is OCR noise or marketing.
+const MAX_WARRANTY_MONTHS = 120;
+
+function extractWarrantyMonths(rawText: string): number | null {
+  const match = rawText.match(WARRANTY_NUMBER_FIRST) ?? rawText.match(WARRANTY_KEYWORD_FIRST);
+  if (!match) return null;
+  const quantity = Number(match[1]);
+  const unit = match[2]!.toLowerCase();
+  const months = unit.startsWith('y') ? quantity * 12 : quantity;
+  if (months <= 0 || months > MAX_WARRANTY_MONTHS) return null;
+  return months;
 }
 
 function extractDate(rawText: string): { value: string | null; confidence: number } {

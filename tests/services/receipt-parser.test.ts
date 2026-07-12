@@ -88,3 +88,33 @@ describe('ReceiptParser — field behavior', () => {
     expect(r.amountMinor).toBe(9900);
   });
 });
+
+describe('warranty hint extraction', () => {
+  it('detects "1 YEAR WARRANTY"', () => {
+    expect(parse('Croma Electronics\nHeadphones 2999.00\n1 YEAR WARRANTY\nTOTAL 2999.00').warrantyMonths).toBe(12);
+  });
+
+  it('detects "WARRANTY: 12 MONTHS"', () => {
+    expect(parse('Store\nWARRANTY: 12 MONTHS\nTOTAL 500.00').warrantyMonths).toBe(12);
+  });
+
+  it('detects "2 YR WARRANTY" shorthand', () => {
+    expect(parse('Store\n2 YR WARRANTY\nTOTAL 500.00').warrantyMonths).toBe(24);
+  });
+
+  it('detects "6 MONTH WARRANTY" singular', () => {
+    expect(parse('Store\n6 MONTH WARRANTY on parts\nTOTAL 500.00').warrantyMonths).toBe(6);
+  });
+
+  it('detects "GUARANTEE 1 YEAR" wording', () => {
+    expect(parse('Store\nGUARANTEE 1 YEAR\nTOTAL 500.00').warrantyMonths).toBe(12);
+  });
+
+  it('returns null when no warranty text present', () => {
+    expect(parse('Store\nMilk 28.00\nTOTAL 28.00').warrantyMonths).toBeNull();
+  });
+
+  it('ignores implausible spans like "99 YEAR WARRANTY"', () => {
+    expect(parse('Store\n99 YEAR WARRANTY\nTOTAL 500.00').warrantyMonths).toBeNull();
+  });
+});
