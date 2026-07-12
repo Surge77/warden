@@ -1,0 +1,53 @@
+{
+  "expo": {
+    "name": "Warden",
+    "slug": "warden",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "warden",
+    "userInterfaceStyle": "automatic",
+    "android": {
+      "package": "com.tejas.warden",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#D9482B"
+      },
+      "permissions": [
+        "android.permission.CAMERA"
+      ],
+      "blockedPermissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
+    },
+    "plugins": [
+      "expo-router",
+      "expo-sqlite",
+      "expo-status-bar",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Warden uses the camera to photograph receipts. Images stay on your device.",
+          "recordAudioAndroid": false
+        }
+      ],
+      "expo-sharing",
+      "@react-native-community/datetimepicker",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/adaptive-icon.png",
+          "imageWidth": 180,
+          "backgroundColor": "#F4EEE1"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {}
+    },
+    "owner": "jx77"
+  }
+}

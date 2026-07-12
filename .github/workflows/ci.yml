@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  quality:
+    name: Lint · Typecheck · Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      # Greenfield guard: only run the full gate once the app is scaffolded
+      # (Phase 0 adds package.json). Until then this job no-ops cleanly.
+      - name: Check for package.json
+        id: pkg
+        run: |
+          if [ -f package.json ]; then echo "exists=true" >> "$GITHUB_OUTPUT"; else echo "exists=false" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Install
+        if: steps.pkg.outputs.exists == 'true'
+        run: npm ci
+
+      - name: Lint
+        if: steps.pkg.outputs.exists == 'true'
+        run: npm run lint --if-present
+
+      - name: Typecheck
+        if: steps.pkg.outputs.exists == 'true'
+        run: npm run typecheck --if-present
+
+      - name: Test
+        if: steps.pkg.outputs.exists == 'true'
+        run: npm test --if-present -- --ci --coverage

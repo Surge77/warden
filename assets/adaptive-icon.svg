@@ -1,0 +1,26 @@
+<svg width="1024" height="1024" viewBox="-160 -160 1344 1344" xmlns="http://www.w3.org/2000/svg">
+  
+  <!-- receipt body with serrated bottom edge -->
+  <path d="M312 200 h400 v560
+    l-40 36 l-40 -36 l-40 36 l-40 -36 l-40 36 l-40 -36 l-40 36 l-40 -36 l-40 36 l-40 -36 z"
+    fill="#FFFDF6"/>
+  <!-- printed lines -->
+  <rect x="360" y="264" width="200" height="26" rx="4" fill="#221F1A"/>
+  <rect x="360" y="330" width="304" height="18" rx="4" fill="#C9C0AC"/>
+  <rect x="360" y="378" width="304" height="18" rx="4" fill="#C9C0AC"/>
+  <rect x="360" y="426" width="220" height="18" rx="4" fill="#C9C0AC"/>
+  <!-- dashed tear line -->
+  <g fill="#8A8171">
+    <rect x="360" y="492" width="36" height="10" rx="3"/>
+    <rect x="412" y="492" width="36" height="10" rx="3"/>
+    <rect x="464" y="492" width="36" height="10" rx="3"/>
+    <rect x="516" y="492" width="36" height="10" rx="3"/>
+    <rect x="568" y="492" width="36" height="10" rx="3"/>
+    <rect x="620" y="492" width="36" height="10" rx="3"/>
+  </g>
+  <!-- rupee total -->
+  <text x="360" y="620" font-family="monospace" font-size="120" font-weight="700" fill="#221F1A">&#8377;</text>
+  <rect x="470" y="540" width="194" height="26" rx="4" fill="#221F1A"/>
+  <rect x="470" y="590" width="140" height="26" rx="4" fill="#D9482B"/>
+</svg>
+

@@ -1,0 +1,52 @@
+# Dependencies
+node_modules/
+
+# Expo / React Native
+.expo/
+.expo-shared/
+dist/
+web-build/
+*.orig.*
+
+# Native builds
+android/
+ios/
+*.apk
+*.aab
+*.keystore
+*.jks
+
+# EAS
+.easignore
+
+# Metro / Babel cache
+.metro-health-check*
+.cache/
+
+# Env & secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Test / coverage
+coverage/
+.nyc_output/
+
+# Logs
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+*.log
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Crash dumps
+*.stackdump

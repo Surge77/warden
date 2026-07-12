@@ -1,0 +1,19 @@
+# Happy-path E2E: open app → capture → review → save → see it on the dashboard.
+# Runs against a dev/release build on an emulator or device:
+#   maestro test .maestro/capture-flow.yaml
+appId: com.tejas.receiptly
+---
+- launchApp
+- assertVisible: 'This month'
+- tapOn: 'Capture'
+- tapOn:
+    text: 'Grant permission'
+    optional: true
+- tapOn: 'Capture'
+- assertVisible: 'Amount (₹)'
+- tapOn:
+    id: 'Amount in rupees'
+- inputText: '250'
+- tapOn: 'Food'
+- tapOn: 'Save expense'
+- assertVisible: 'This month'
