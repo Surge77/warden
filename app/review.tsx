@@ -14,11 +14,14 @@ import {
 } from 'react-native';
 
 import { WarrantyFields } from '@/components/warranty-fields';
+import { db } from '@/db/client';
+import { FREE_ITEM_LIMIT, canAddItem } from '@/lib/pro';
 import {
   buildExpenseFromForm,
   isFormSavable,
   parsedToInitialForm,
 } from '@/services/expense-draft';
+import { SETTING_KEYS, createSettingsRepository } from '@/services/settings-repository';
 import { useExpenseStore } from '@/state/expense-store';
 import { layout, mono, paper } from '@/theme';
 
@@ -60,6 +63,14 @@ export default function ReviewScreen() {
   async function onSave() {
     const draft = buildExpenseFromForm(form, categories, params.imageUri ?? null, rawText);
     if (!draft) return;
+    const isPro = await createSettingsRepository(db).getBool(SETTING_KEYS.proUnlocked);
+    if (!canAddItem(useExpenseStore.getState().expenses.length, isPro)) {
+      Alert.alert(
+        'Free limit reached',
+        `The free tier tracks ${FREE_ITEM_LIMIT} items. Unlock Warden Pro in Settings for unlimited items.`,
+      );
+      return;
+    }
     try {
       await addExpense(draft);
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});

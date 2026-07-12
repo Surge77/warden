@@ -2,28 +2,24 @@ import * as DocumentPicker from 'expo-document-picker';
 import { File, Paths } from 'expo-file-system';
 import { useFocusEffect } from 'expo-router';
 import * as Sharing from 'expo-sharing';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import {
   Alert,
   Pressable,
   ScrollView,
   StyleSheet,
-  Switch,
   Text,
   TextInput,
   View,
 } from 'react-native';
 
 import { BudgetEditor } from '@/components/budget-editor';
+import { PreferencesSection } from '@/components/preferences-section';
 import { useToast } from '@/components/toast';
 import { db } from '@/db/client';
 import { exportBackup, parseBackup, restoreBackup } from '@/services/backup';
-import { disableDailyReminder, enableDailyReminder } from '@/services/reminders';
-import { createSettingsRepository, SETTING_KEYS } from '@/services/settings-repository';
 import { useExpenseStore } from '@/state/expense-store';
 import { layout, mono, paper, type } from '@/theme';
-
-const settingsRepo = createSettingsRepository(db);
 
 const PALETTE = [
   '#EF4444',
@@ -41,8 +37,6 @@ export default function SettingsScreen() {
   const show = useToast((s) => s.show);
   const [name, setName] = useState('');
   const [color, setColor] = useState<string>(PALETTE[0]);
-  const [reminderOn, setReminderOn] = useState(false);
-  const [lockOn, setLockOn] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -50,31 +44,6 @@ export default function SettingsScreen() {
       void loadBudgets();
     }, [loadCategories, loadBudgets]),
   );
-
-  useEffect(() => {
-    void settingsRepo.getBool(SETTING_KEYS.dailyReminder).then(setReminderOn);
-    void settingsRepo.getBool(SETTING_KEYS.appLock).then(setLockOn);
-  }, []);
-
-  async function onToggleReminder(value: boolean) {
-    setReminderOn(value);
-    if (value) {
-      const granted = await enableDailyReminder();
-      if (!granted) {
-        setReminderOn(false);
-        show('Notification permission denied.');
-        return;
-      }
-    } else {
-      await disableDailyReminder();
-    }
-    await settingsRepo.setBool(SETTING_KEYS.dailyReminder, value);
-  }
-
-  async function onToggleLock(value: boolean) {
-    setLockOn(value);
-    await settingsRepo.setBool(SETTING_KEYS.appLock, value);
-  }
 
   async function onExportBackup() {
     try {
@@ -185,24 +154,7 @@ export default function SettingsScreen() {
       <BudgetEditor />
 
       <Text style={styles.sectionTitle}>* PREFERENCES *</Text>
-      <View style={styles.prefRow}>
-        <Text style={styles.prefLabel}>DAILY 9PM REMINDER</Text>
-        <Switch
-          value={reminderOn}
-          onValueChange={(v) => void onToggleReminder(v)}
-          trackColor={{ true: paper.accent }}
-          accessibilityLabel="Daily reminder"
-        />
-      </View>
-      <View style={styles.prefRow}>
-        <Text style={styles.prefLabel}>FINGERPRINT LOCK</Text>
-        <Switch
-          value={lockOn}
-          onValueChange={(v) => void onToggleLock(v)}
-          trackColor={{ true: paper.accent }}
-          accessibilityLabel="Fingerprint lock"
-        />
-      </View>
+      <PreferencesSection onPermissionDenied={() => show('Notification permission denied.')} />
 
       <Text style={styles.sectionTitle}>* BACKUP *</Text>
       <View style={styles.backupRow}>

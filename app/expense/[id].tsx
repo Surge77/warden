@@ -9,6 +9,7 @@ import { db, schema } from '@/db/client';
 import { monthKey } from '@/lib/date';
 import { formatINR } from '@/lib/money';
 import { returnDeadlineMs, warrantyExpiryMs } from '@/lib/warranty';
+import { shareClaimPack } from '@/services/claim-pack';
 import { createExpenseRepository } from '@/services/expense-repository';
 import { useExpenseStore } from '@/state/expense-store';
 import { layout, mono, paper, type } from '@/theme';
@@ -24,6 +25,7 @@ export default function ExpenseDetailScreen() {
   const show = useToast((s) => s.show);
   const [expense, setExpense] = useState<Expense | null>(null);
   const [categoryName, setCategoryName] = useState<string | null>(null);
+  const [now] = useState(() => Date.now());
 
   useEffect(() => {
     if (!Number.isInteger(expenseId)) return; // malformed/absent route param
@@ -86,7 +88,7 @@ export default function ExpenseDetailScreen() {
         <Detail label="CATEGORY" value={(categoryName ?? 'Uncategorized').toUpperCase()} />
         <Detail label="DATE" value={monthKey(expense.spentAt)} />
         {expense.note ? <Detail label="NOTE" value={expense.note} /> : null}
-        <DeadlineRows expense={expense} />
+        <DeadlineRows expense={expense} now={now} />
         <View style={styles.tear} />
         <View style={styles.totalRow}>
           <Text style={styles.totalLabel}>TOTAL</Text>
@@ -96,6 +98,15 @@ export default function ExpenseDetailScreen() {
       </ReceiptCard>
 
       <View style={styles.actions}>
+        <InkButton
+          label="Claim pack"
+          variant="primary"
+          onPress={() => {
+            void shareClaimPack(expense).catch(() => {
+              Alert.alert('Could not share', 'Something went wrong building the claim pack.');
+            });
+          }}
+        />
         <InkButton label="Edit" onPress={() => router.push(`/edit/${expenseId}`)} />
         <InkButton label="Delete" variant="danger" onPress={onDelete} />
       </View>
@@ -104,8 +115,7 @@ export default function ExpenseDetailScreen() {
 }
 
 // Countdown lines for the two protection clocks; expired/absent clocks show their state.
-function DeadlineRows({ expense }: { expense: Expense }) {
-  const now = Date.now();
+function DeadlineRows({ expense, now }: { expense: Expense; now: number }) {
   const input = {
     purchaseDateMs: expense.spentAt,
     returnWindowDays: expense.returnWindowDays,

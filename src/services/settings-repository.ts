@@ -8,6 +8,8 @@ export type { AppDatabase };
 export const SETTING_KEYS = {
   dailyReminder: 'daily_reminder_enabled',
   appLock: 'app_lock_enabled',
+  // Local Pro flag; swapped for a Play Billing entitlement check before store release.
+  proUnlocked: 'pro_unlocked',
 } as const;
 
 export interface SettingsRepository {
