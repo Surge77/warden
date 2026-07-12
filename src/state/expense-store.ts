@@ -4,6 +4,7 @@ import { db, schema } from '@/db/client';
 import { budgetStatuses, createBudgetRepository } from '@/services/budget-repository';
 import { createCategoryRepository } from '@/services/category-repository';
 import { createExpenseRepository } from '@/services/expense-repository';
+import { cancelItemReminders, syncItemReminders } from '@/services/item-reminders';
 import { createMerchantMemory } from '@/services/merchant-memory';
 import type {
   Budget,
@@ -88,17 +89,21 @@ export const useExpenseStore = create<ExpenseState>((set, get) => ({
   async addExpense(e) {
     const created = await repo.create(e);
     learnFrom(e);
+    // Reminder sync is best-effort: a notification failure must never block a save.
+    await syncItemReminders(db, created, Date.now()).catch(() => {});
     await get().loadExpenses();
     return created;
   },
 
   async editExpense(id, patch) {
-    await repo.update(id, patch);
+    const updated = await repo.update(id, patch);
     learnFrom(patch);
+    await syncItemReminders(db, updated, Date.now()).catch(() => {});
     await get().loadExpenses();
   },
 
   async deleteExpense(id) {
+    await cancelItemReminders(db, id).catch(() => {});
     await repo.remove(id);
     await get().loadExpenses();
   },
