@@ -13,6 +13,7 @@ import {
   View,
 } from 'react-native';
 
+import { WarrantyFields } from '@/components/warranty-fields';
 import {
   buildExpenseFromForm,
   isFormSavable,
@@ -33,6 +34,11 @@ export default function ReviewScreen() {
   const [merchant, setMerchant] = useState(initial.merchant);
   const [note, setNote] = useState(initial.note);
   const [categoryName, setCategoryName] = useState(initial.categoryName);
+  const [warranty, setWarranty] = useState({
+    itemName: initial.itemName,
+    returnWindowDays: initial.returnWindowDays,
+    warrantyMonths: initial.warrantyMonths,
+  });
   const [showPicker, setShowPicker] = useState(false);
 
   useEffect(() => {
@@ -48,7 +54,7 @@ export default function ReviewScreen() {
     });
   }, [initial.merchant, suggestCategoryId]);
 
-  const form = { amount, date, merchant, note, categoryName };
+  const form = { amount, date, merchant, note, categoryName, ...warranty };
   const canSave = isFormSavable(form);
 
   async function onSave() {
@@ -128,6 +134,11 @@ export default function ReviewScreen() {
         </View>
       </Field>
 
+      <WarrantyFields
+        value={warranty}
+        onChange={(patch) => setWarranty((prev) => ({ ...prev, ...patch }))}
+      />
+
       <Field label="Note (optional)">
         <TextInput
           value={note}
@@ -144,7 +155,7 @@ export default function ReviewScreen() {
         disabled={!canSave}
         accessibilityRole="button"
       >
-        <Text style={styles.saveText}>Save expense</Text>
+        <Text style={styles.saveText}>Save item</Text>
       </Pressable>
     </ScrollView>
   );

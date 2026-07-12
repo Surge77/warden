@@ -211,3 +211,32 @@ describe('ExpenseRepository', () => {
     expect(list.map((e) => e.merchant)).toEqual(['Second', 'First']);
   });
 });
+
+describe('warranty fields', () => {
+  it('persists and reads back itemName, returnWindowDays, warrantyMonths', async () => {
+    const { repo } = makeRepo();
+    const created = await repo.create(
+      baseExpense({ itemName: 'Headphones', returnWindowDays: 30, warrantyMonths: 12 }),
+    );
+    const fetched = await repo.getById(created.id);
+    expect(fetched?.itemName).toBe('Headphones');
+    expect(fetched?.returnWindowDays).toBe(30);
+    expect(fetched?.warrantyMonths).toBe(12);
+  });
+
+  it('defaults warranty fields to null when omitted', async () => {
+    const { repo } = makeRepo();
+    const created = await repo.create(baseExpense());
+    expect(created.itemName).toBeNull();
+    expect(created.returnWindowDays).toBeNull();
+    expect(created.warrantyMonths).toBeNull();
+  });
+
+  it('updates warranty fields via patch', async () => {
+    const { repo } = makeRepo();
+    const created = await repo.create(baseExpense());
+    const updated = await repo.update(created.id, { warrantyMonths: 24, itemName: 'TV' });
+    expect(updated.warrantyMonths).toBe(24);
+    expect(updated.itemName).toBe('TV');
+  });
+});

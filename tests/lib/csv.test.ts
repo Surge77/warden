@@ -29,6 +29,9 @@ function makeExpense(overrides: Partial<Expense> = {}): Expense {
     note: 'Lunch',
     imageUri: null,
     rawOcrText: null,
+    itemName: null,
+    returnWindowDays: null,
+    warrantyMonths: null,
     createdAt: 0,
     ...overrides,
   };

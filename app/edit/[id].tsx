@@ -13,6 +13,7 @@ import {
   View,
 } from 'react-native';
 
+import { WarrantyFields } from '@/components/warranty-fields';
 import { db } from '@/db/client';
 import { buildExpenseFromForm, expenseToForm, isFormSavable } from '@/services/expense-draft';
 import { createExpenseRepository } from '@/services/expense-repository';
@@ -33,6 +34,11 @@ export default function EditExpenseScreen() {
   const [merchant, setMerchant] = useState('');
   const [note, setNote] = useState('');
   const [categoryName, setCategoryName] = useState('');
+  const [warranty, setWarranty] = useState({
+    itemName: '',
+    returnWindowDays: '',
+    warrantyMonths: '',
+  });
   const [showPicker, setShowPicker] = useState(false);
 
   useEffect(() => {
@@ -50,6 +56,11 @@ export default function EditExpenseScreen() {
       setMerchant(form.merchant);
       setNote(form.note);
       setCategoryName(form.categoryName);
+      setWarranty({
+        itemName: form.itemName,
+        returnWindowDays: form.returnWindowDays,
+        warrantyMonths: form.warrantyMonths,
+      });
     });
   }, [expenseId]);
 
@@ -61,7 +72,7 @@ export default function EditExpenseScreen() {
     );
   }
 
-  const form = { amount, date, merchant, note, categoryName };
+  const form = { amount, date, merchant, note, categoryName, ...warranty };
   const canSave = isFormSavable(form);
 
   async function onSave() {
@@ -141,6 +152,11 @@ export default function EditExpenseScreen() {
           })}
         </View>
       </Field>
+
+      <WarrantyFields
+        value={warranty}
+        onChange={(patch) => setWarranty((prev) => ({ ...prev, ...patch }))}
+      />
 
       <Field label="Note (optional)">
         <TextInput

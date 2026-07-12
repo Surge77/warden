@@ -15,6 +15,10 @@ export interface ReviewForm {
   merchant: string;
   note: string;
   categoryName: string;
+  itemName: string;
+  /** Numeric strings — TextInput/chip values; '' means not set. */
+  returnWindowDays: string;
+  warrantyMonths: string;
 }
 
 /** Initial review-form values derived from raw OCR text. Pure. */
@@ -26,6 +30,9 @@ export function parsedToInitialForm(rawText: string): ReviewForm {
     merchant: parsed.merchant ?? '',
     note: '',
     categoryName: categorize(parsed.merchant),
+    itemName: '',
+    returnWindowDays: '',
+    warrantyMonths: parsed.warrantyMonths !== null ? String(parsed.warrantyMonths) : '',
   };
 }
 
@@ -41,7 +48,16 @@ export function expenseToForm(expense: Expense, categories: readonly Category[])
     merchant: expense.merchant ?? '',
     note: expense.note ?? '',
     categoryName: category?.name ?? DEFAULT_CATEGORY_NAME,
+    itemName: expense.itemName ?? '',
+    returnWindowDays: expense.returnWindowDays !== null ? String(expense.returnWindowDays) : '',
+    warrantyMonths: expense.warrantyMonths !== null ? String(expense.warrantyMonths) : '',
   };
+}
+
+/** Parse a positive-integer form field; '' or garbage → null. */
+function parsePositiveInt(value: string): number | null {
+  const n = Number(value.trim());
+  return Number.isInteger(n) && n > 0 ? n : null;
 }
 
 /** True when the form has a positive, parseable amount (the save precondition). */
@@ -72,5 +88,8 @@ export function buildExpenseFromForm(
     note: form.note.trim() || null,
     imageUri: imageUri ?? null,
     rawOcrText: rawText || null,
+    itemName: form.itemName.trim() || null,
+    returnWindowDays: parsePositiveInt(form.returnWindowDays),
+    warrantyMonths: parsePositiveInt(form.warrantyMonths),
   };
 }
