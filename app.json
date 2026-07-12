@@ -46,7 +46,10 @@
       "typedRoutes": true
     },
     "extra": {
-      "router": {}
+      "router": {},
+      "eas": {
+        "projectId": "5ebcd158-76cb-4ba6-9c71-f84f14c4409c"
+      }
     },
     "owner": "jx77"
   }
