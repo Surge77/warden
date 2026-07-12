@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 
-import { formatINR } from '@/lib/money';
-import { parseAmountToMinor } from '@/lib/money';
+import { formatINR , parseAmountToMinor } from '@/lib/money';
+
 import { useExpenseStore } from '@/state/expense-store';
 import { mono, paper, type } from '@/theme';
 
