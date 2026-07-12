@@ -1,4 +1,4 @@
-import { budgets, categories, expenses, merchantMemory } from '@/db/schema';
+import { budgets, categories, expenses, merchantMemory, reminders } from '@/db/schema';
 import type { AppDatabase } from '@/db/client';
 
 export type { AppDatabase };
@@ -6,29 +6,31 @@ export type { AppDatabase };
 export const BACKUP_VERSION = 1;
 
 export interface BackupFile {
-  app: 'receiptly';
+  app: 'warden';
   version: number;
   exportedAt: number;
   categories: unknown[];
   expenses: unknown[];
   budgets: unknown[];
   merchantMemory: unknown[];
+  reminders: unknown[];
 }
 
 export async function exportBackup(db: AppDatabase, now: number): Promise<string> {
   const data: BackupFile = {
-    app: 'receiptly',
+    app: 'warden',
     version: BACKUP_VERSION,
     exportedAt: now,
     categories: await db.select().from(categories),
     expenses: await db.select().from(expenses),
     budgets: await db.select().from(budgets),
     merchantMemory: await db.select().from(merchantMemory),
+    reminders: await db.select().from(reminders),
   };
   return JSON.stringify(data);
 }
 
-/** Throws with a user-safe message when the payload is not a Receiptly backup. */
+/** Throws with a user-safe message when the payload is not a Warden backup. */
 export function parseBackup(json: string): BackupFile {
   let raw: unknown;
   try {
@@ -39,16 +41,16 @@ export function parseBackup(json: string): BackupFile {
   if (
     typeof raw !== 'object' ||
     raw === null ||
-    (raw as BackupFile).app !== 'receiptly' ||
+    (raw as BackupFile).app !== 'warden' ||
     typeof (raw as BackupFile).version !== 'number'
   ) {
-    throw new Error('Not a Receiptly backup.');
+    throw new Error('Not a Warden backup.');
   }
   const b = raw as BackupFile;
   if (b.version > BACKUP_VERSION) {
-    throw new Error('Backup was made by a newer app version. Update Receiptly first.');
+    throw new Error('Backup was made by a newer app version. Update Warden first.');
   }
-  for (const key of ['categories', 'expenses', 'budgets', 'merchantMemory'] as const) {
+  for (const key of ['categories', 'expenses', 'budgets', 'merchantMemory', 'reminders'] as const) {
     if (!Array.isArray(b[key])) throw new Error('Backup file is damaged.');
   }
   return b;
@@ -56,6 +58,7 @@ export function parseBackup(json: string): BackupFile {
 
 /** Replace-all restore. Caller confirms with the user first — this wipes current data. */
 export async function restoreBackup(db: AppDatabase, backup: BackupFile): Promise<void> {
+  await db.delete(reminders);
   await db.delete(merchantMemory);
   await db.delete(budgets);
   await db.delete(expenses);
@@ -73,5 +76,13 @@ export async function restoreBackup(db: AppDatabase, backup: BackupFile): Promis
     await db
       .insert(merchantMemory)
       .values(backup.merchantMemory as (typeof merchantMemory.$inferInsert)[]);
+  }
+  if (backup.reminders.length > 0) {
+    // OS notification schedules do not survive a restore — clear ids so the app reschedules.
+    const rows = (backup.reminders as (typeof reminders.$inferInsert)[]).map((r) => ({
+      ...r,
+      notificationId: null,
+    }));
+    await db.insert(reminders).values(rows);
   }
 }

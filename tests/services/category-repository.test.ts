@@ -1,19 +1,9 @@
-import Database from 'better-sqlite3';
-import { drizzle } from 'drizzle-orm/better-sqlite3';
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
-
-import * as schema from '@/db/schema';
-import { createCategoryRepository, type AppDatabase } from '@/services/category-repository';
-
-const MIGRATION = join(__dirname, '../../drizzle/0000_violet_marrow.sql');
+import { createCategoryRepository } from '@/services/category-repository';
+import { makeTestDb } from '../helpers/test-db';
 
 function makeRepo() {
-  const sqlite = new Database(':memory:');
-  const ddl = readFileSync(MIGRATION, 'utf8').replace(/-->.*statement-breakpoint/g, '');
-  sqlite.exec(ddl);
-  const db = drizzle(sqlite, { schema });
-  return { repo: createCategoryRepository(db as unknown as AppDatabase), db };
+  const db = makeTestDb();
+  return { repo: createCategoryRepository(db), db };
 }
 
 describe('CategoryRepository', () => {
