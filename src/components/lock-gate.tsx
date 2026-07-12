@@ -17,7 +17,7 @@ export function LockGate({ children }: { children: ReactNode }) {
 
   const tryUnlock = useCallback(async () => {
     const result = await LocalAuthentication.authenticateAsync({
-      promptMessage: 'Unlock Receiptly',
+      promptMessage: 'Unlock Warden',
     }).catch(() => ({ success: false }) as const);
     setState(result.success ? 'open' : 'locked');
   }, []);
@@ -45,7 +45,7 @@ export function LockGate({ children }: { children: ReactNode }) {
 
   return (
     <View style={styles.center}>
-      <Text style={styles.title}>RECEIPTLY LOCKED</Text>
+      <Text style={styles.title}>WARDEN LOCKED</Text>
       {state === 'locked' ? (
         <Pressable style={styles.button} onPress={() => void tryUnlock()} accessibilityRole="button">
           <Text style={styles.buttonText}>UNLOCK</Text>

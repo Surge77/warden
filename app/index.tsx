@@ -9,6 +9,7 @@ import { InkButton } from '@/components/ink-button';
 import { ReceiptCard } from '@/components/receipt-card';
 import { monthKey } from '@/lib/date';
 import { formatINR } from '@/lib/money';
+import { protectionSummary } from '@/lib/warranty';
 import { weeklyInsight } from '@/services/insights';
 import { useExpenseStore } from '@/state/expense-store';
 import { layout, mono, paper, type } from '@/theme';
@@ -40,20 +41,24 @@ export default function DashboardScreen() {
   const monthTotal = monthTotals.reduce((sum, t) => sum + t.totalMinor, 0);
   const week = useMemo(() => weeklyInsight(expenses, now), [expenses, now]);
   const weekTopName = categories.find((c) => c.id === week.topCategoryId)?.name;
+  const protection = useMemo(() => protectionSummary(expenses, now), [expenses, now]);
 
   return (
     <View style={styles.container}>
       <Animated.View entering={FadeInDown.duration(350)}>
         <ReceiptCard>
-          <Text style={type.label}>This month · total</Text>
-        <Text style={styles.totalValue}>{formatINR(monthTotal)}</Text>
-        {week.count > 0 ? (
+          <Text style={type.label}>Value protected · under warranty</Text>
+        <Text style={styles.totalValue}>{formatINR(protection.protectedValueMinor)}</Text>
+        <Text style={styles.weekLine} numberOfLines={1}>
+          {protection.protectedCount} ITEM{protection.protectedCount === 1 ? '' : 'S'} COVERED
+          {protection.expiringSoonCount > 0
+            ? ` · ⚠ ${protection.expiringSoonCount} EXPIRING SOON`
+            : ''}
+          {` · ${formatINR(monthTotal)} THIS MONTH`}
+        </Text>
+        {week.count > 0 && weekTopName ? (
           <Text style={styles.weekLine} numberOfLines={1}>
-            7D {formatINR(week.totalMinor)}
-            {week.changeRatio !== null
-              ? ` · ${week.changeRatio >= 0 ? '+' : ''}${Math.round(week.changeRatio * 100)}% VS LAST WK`
-              : ''}
-            {weekTopName ? ` · TOP ${weekTopName.toUpperCase()}` : ''}
+            7D {formatINR(week.totalMinor)} · TOP {weekTopName.toUpperCase()}
           </Text>
         ) : null}
         <View style={styles.totalRule} />
@@ -83,7 +88,7 @@ export default function DashboardScreen() {
           <Link href={{ pathname: '/expense/[id]', params: { id: item.id } }} asChild>
             <Pressable style={styles.row}>
               <Text style={styles.rowLabel} numberOfLines={1}>
-                {(item.merchant ?? 'Unknown').toUpperCase()}
+                {(item.itemName ?? item.merchant ?? 'Unknown').toUpperCase()}
               </Text>
               <Text style={styles.rowDots} numberOfLines={1}>
                 ............................

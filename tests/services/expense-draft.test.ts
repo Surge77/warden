@@ -19,6 +19,9 @@ const form = (overrides: Partial<ReviewForm> = {}): ReviewForm => ({
   merchant: 'Swiggy',
   note: '',
   categoryName: 'Food',
+  itemName: '',
+  returnWindowDays: '',
+  warrantyMonths: '',
   ...overrides,
 });
 
@@ -88,6 +91,9 @@ describe('expenseToForm', () => {
     note: 'Lunch',
     imageUri: null,
     rawOcrText: null,
+    itemName: null,
+    returnWindowDays: null,
+    warrantyMonths: null,
     createdAt: 0,
     ...overrides,
   });
@@ -110,5 +116,44 @@ describe('expenseToForm', () => {
   it('falls back to Other for an unknown or null categoryId', () => {
     expect(expenseToForm(expense({ categoryId: 999 }), CATEGORIES).categoryName).toBe('Other');
     expect(expenseToForm(expense({ categoryId: null }), CATEGORIES).categoryName).toBe('Other');
+  });
+});
+
+describe('warranty fields in draft flow', () => {
+  it('prefills warrantyMonths detected by the parser', () => {
+    const form = parsedToInitialForm('Croma\n1 YEAR WARRANTY\nTOTAL 2999.00');
+    expect(form.warrantyMonths).toBe('12');
+  });
+
+  it('leaves warranty fields empty when receipt has no hint', () => {
+    const form = parsedToInitialForm('Store\nTOTAL 100.00');
+    expect(form.warrantyMonths).toBe('');
+    expect(form.returnWindowDays).toBe('');
+    expect(form.itemName).toBe('');
+  });
+
+  it('buildExpenseFromForm carries warranty fields through', () => {
+    const form = parsedToInitialForm('Store\nTOTAL 100.00');
+    const expense = buildExpenseFromForm(
+      { ...form, itemName: ' Headphones ', warrantyMonths: '12', returnWindowDays: '30' },
+      [],
+      null,
+      'raw',
+    );
+    expect(expense?.itemName).toBe('Headphones');
+    expect(expense?.warrantyMonths).toBe(12);
+    expect(expense?.returnWindowDays).toBe(30);
+  });
+
+  it('treats blank or invalid warranty inputs as null', () => {
+    const form = parsedToInitialForm('Store\nTOTAL 100.00');
+    const expense = buildExpenseFromForm(
+      { ...form, warrantyMonths: 'abc', returnWindowDays: '' },
+      [],
+      null,
+      'raw',
+    );
+    expect(expense?.warrantyMonths).toBeNull();
+    expect(expense?.returnWindowDays).toBeNull();
   });
 });

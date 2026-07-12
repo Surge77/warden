@@ -79,13 +79,13 @@ export default function SettingsScreen() {
   async function onExportBackup() {
     try {
       const json = await exportBackup(db, Date.now());
-      const file = new File(Paths.cache, 'receiptly-backup.json');
+      const file = new File(Paths.cache, 'warden-backup.json');
       file.create({ overwrite: true });
       file.write(json);
       if (await Sharing.isAvailableAsync()) {
         await Sharing.shareAsync(file.uri, {
           mimeType: 'application/json',
-          dialogTitle: 'Export Receiptly backup',
+          dialogTitle: 'Export Warden backup',
         });
       }
     } catch {

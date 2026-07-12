@@ -15,6 +15,9 @@ export interface Expense {
   note: string | null;
   imageUri: string | null;
   rawOcrText: string | null;
+  itemName: string | null;
+  returnWindowDays: number | null;
+  warrantyMonths: number | null;
   createdAt: number;
 }
 
@@ -27,6 +30,9 @@ export interface NewExpense {
   note?: string | null;
   imageUri?: string | null;
   rawOcrText?: string | null;
+  itemName?: string | null;
+  returnWindowDays?: number | null;
+  warrantyMonths?: number | null;
 }
 
 export interface ExpenseFilter {

@@ -1,4 +1,5 @@
 import {
+  protectionSummary,
   EXPIRY_LEAD_DAYS,
   NUDGE_LEAD_DAYS,
   RETURN_LEAD_DAYS,
@@ -96,5 +97,47 @@ describe('planReminders', () => {
 
   it('returns empty plan when item has neither window nor warranty', () => {
     expect(planReminders({ purchaseDateMs: PURCHASE }, now)).toEqual([]);
+  });
+});
+
+describe('protectionSummary', () => {
+  const item = (opts: { amountMinor: number; monthsAgo: number; warrantyMonths: number | null }) => ({
+    amountMinor: opts.amountMinor,
+    spentAt: Date.UTC(2026, 0 - opts.monthsAgo, 15),
+    warrantyMonths: opts.warrantyMonths,
+  });
+  const now = Date.UTC(2026, 0, 16);
+
+  it('sums value and count of items still under warranty', () => {
+    const summary = protectionSummary(
+      [
+        item({ amountMinor: 100_00, monthsAgo: 1, warrantyMonths: 12 }), // active
+        item({ amountMinor: 50_00, monthsAgo: 24, warrantyMonths: 12 }), // expired
+        item({ amountMinor: 25_00, monthsAgo: 1, warrantyMonths: null }), // no warranty
+      ],
+      now,
+    );
+    expect(summary.protectedCount).toBe(1);
+    expect(summary.protectedValueMinor).toBe(100_00);
+  });
+
+  it('counts items whose warranty expires within 30 days', () => {
+    const summary = protectionSummary(
+      [
+        item({ amountMinor: 10_00, monthsAgo: 11, warrantyMonths: 12 }), // expires ~2026-02-15 → within 30d
+        item({ amountMinor: 10_00, monthsAgo: 1, warrantyMonths: 12 }), // far out
+      ],
+      now,
+    );
+    expect(summary.expiringSoonCount).toBe(1);
+    expect(summary.protectedCount).toBe(2);
+  });
+
+  it('returns zeros for an empty list', () => {
+    expect(protectionSummary([], now)).toEqual({
+      protectedCount: 0,
+      protectedValueMinor: 0,
+      expiringSoonCount: 0,
+    });
   });
 });

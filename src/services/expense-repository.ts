@@ -31,6 +31,9 @@ export function createExpenseRepository(db: AppDatabase): ExpenseRepository {
           note: e.note ?? null,
           imageUri: e.imageUri ?? null,
           rawOcrText: e.rawOcrText ?? null,
+          itemName: e.itemName ?? null,
+          returnWindowDays: e.returnWindowDays ?? null,
+          warrantyMonths: e.warrantyMonths ?? null,
         })
         .returning();
       if (!row) throw new Error('Insert returned no row');
@@ -123,6 +126,9 @@ function toUpdateSet(e: Partial<NewExpense>) {
     ...(e.note !== undefined ? { note: e.note } : {}),
     ...(e.imageUri !== undefined ? { imageUri: e.imageUri } : {}),
     ...(e.rawOcrText !== undefined ? { rawOcrText: e.rawOcrText } : {}),
+    ...(e.itemName !== undefined ? { itemName: e.itemName } : {}),
+    ...(e.returnWindowDays !== undefined ? { returnWindowDays: e.returnWindowDays } : {}),
+    ...(e.warrantyMonths !== undefined ? { warrantyMonths: e.warrantyMonths } : {}),
   };
 }
 
@@ -137,6 +143,9 @@ function toExpense(row: ExpenseRow): Expense {
     note: row.note,
     imageUri: row.imageUri,
     rawOcrText: row.rawOcrText,
+    itemName: row.itemName,
+    returnWindowDays: row.returnWindowDays,
+    warrantyMonths: row.warrantyMonths,
     createdAt: row.createdAt,
   };
 }

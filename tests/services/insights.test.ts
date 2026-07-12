@@ -15,6 +15,9 @@ function expense(daysAgo: number, amountMinor: number, categoryId: number | null
     note: null,
     imageUri: null,
     rawOcrText: null,
+    itemName: null,
+    returnWindowDays: null,
+    warrantyMonths: null,
     createdAt: NOW,
   };
 }
