@@ -1,4 +1,5 @@
 import {
+  nextDeadline,
   protectionSummary,
   EXPIRY_LEAD_DAYS,
   NUDGE_LEAD_DAYS,
@@ -139,5 +140,35 @@ describe('protectionSummary', () => {
       protectedValueMinor: 0,
       expiringSoonCount: 0,
     });
+  });
+});
+
+describe('nextDeadline', () => {
+  const now = PURCHASE + 5 * DAY_MS;
+
+  it('picks return deadline when it is the earliest future deadline', () => {
+    const d = nextDeadline({ purchaseDateMs: PURCHASE, returnWindowDays: 30, warrantyMonths: 12 }, now);
+    expect(d).toEqual({ kind: 'return', atMs: PURCHASE + 30 * DAY_MS });
+  });
+
+  it('falls through to warranty expiry once the return window has passed', () => {
+    const d = nextDeadline(
+      { purchaseDateMs: PURCHASE, returnWindowDays: 30, warrantyMonths: 12 },
+      PURCHASE + 45 * DAY_MS,
+    );
+    expect(d?.kind).toBe('expiry');
+    expect(d?.atMs).toBe(warrantyExpiryMs({ purchaseDateMs: PURCHASE, warrantyMonths: 12 }));
+  });
+
+  it('returns null when every deadline is in the past', () => {
+    const d = nextDeadline(
+      { purchaseDateMs: PURCHASE, returnWindowDays: 7, warrantyMonths: 1 },
+      PURCHASE + 400 * DAY_MS,
+    );
+    expect(d).toBeNull();
+  });
+
+  it('returns null when the item has neither window nor warranty', () => {
+    expect(nextDeadline({ purchaseDateMs: PURCHASE }, now)).toBeNull();
   });
 });

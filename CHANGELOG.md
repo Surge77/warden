@@ -5,6 +5,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) · Versioning: 
 
 ## [Unreleased]
 ### Added
+- Dashboard redesign: vault dial (share of value still protected) and deadline docket (next return/expiry deadlines via new pure `nextDeadline` helper); ink-green theme pass carried into the splash background.
 - Warranty domain: items carry name, return window, and warranty length; migration 0002 adds the fields plus a `reminders` table.
 - Parser detects warranty hints on receipts ("1 YEAR WARRANTY", "WARRANTY: 12 MONTHS") and pre-fills the review screen.
 - Review/edit screens: item name input, return-window chips (7/15/30d/custom), warranty chips (6mo/1yr/2yr/custom).

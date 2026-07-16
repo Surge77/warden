@@ -64,6 +64,29 @@ export function planReminders(input: WarrantyInput, nowMs: number): ReminderPlan
     .sort((a, b) => a.fireAtMs - b.fireAtMs);
 }
 
+export interface NextDeadline {
+  kind: 'return' | 'expiry';
+  atMs: number;
+}
+
+/** Earliest deadline still ahead of `nowMs` — return window beats warranty expiry. Pure. */
+export function nextDeadline(input: WarrantyInput, nowMs: number): NextDeadline | null {
+  const candidates: NextDeadline[] = [];
+
+  const returnDeadline = returnDeadlineMs(input);
+  if (returnDeadline !== null && returnDeadline > nowMs) {
+    candidates.push({ kind: 'return', atMs: returnDeadline });
+  }
+
+  const expiry = warrantyExpiryMs(input);
+  if (expiry !== null && expiry > nowMs) {
+    candidates.push({ kind: 'expiry', atMs: expiry });
+  }
+
+  if (candidates.length === 0) return null;
+  return candidates.reduce((a, b) => (a.atMs <= b.atMs ? a : b));
+}
+
 /** Warranty expiring within this many days counts as "expiring soon" on the dashboard. */
 export const EXPIRING_SOON_DAYS = 30;
 

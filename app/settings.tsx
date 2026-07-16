@@ -22,14 +22,14 @@ import { useExpenseStore } from '@/state/expense-store';
 import { layout, mono, paper, type } from '@/theme';
 
 const PALETTE = [
-  '#EF4444',
-  '#F59E0B',
-  '#22C55E',
-  '#14B8A6',
-  '#3B82F6',
-  '#A855F7',
-  '#EC4899',
-  '#6B7280',
+  '#E0552E',
+  '#C9A96A',
+  '#8CBB94',
+  '#5FB0A5',
+  '#7DA7D9',
+  '#B08BC9',
+  '#D98BA6',
+  '#8FA391',
 ] as const;
 
 export default function SettingsScreen() {
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
   saveDisabled: { opacity: 0.4 },
   saveText: {
     fontFamily: mono,
-    color: '#fff',
+    color: paper.bg,
     fontWeight: '700',
     fontSize: 13,
     letterSpacing: 2,
