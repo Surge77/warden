@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Warden — Warranty &amp; Receipt Vault</title>
+<meta name="description" content="Snap a receipt. Warden reads it on-device, watches your return window and warranty, and knocks before either door closes. No cloud. No account. No analytics." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,WONK@0,9..144,300..900,0;0,9..144,300..900,1;1,9..144,300..900,1&family=Fragment+Mono:ital@0;1&family=Newsreader:ital,opsz,wght@1,6..72,300..500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles/base.css" />
+<link rel="stylesheet" href="styles/hero.css" />
+<link rel="stylesheet" href="styles/sections.css" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
+</head>
+<body>
+<canvas id="ink" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav reveal">
+  <a class="wordmark" href="#top">
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M12 2 3 6v6c0 5.2 3.8 8.9 9 10 5.2-1.1 9-4.8 9-10V6l-9-4Z" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8.5 8h7M8.5 11h7M8.5 14h4.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+    WARDEN
+  </a>
+  <nav>
+    <a href="#clocks">Two clocks</a>
+    <a href="#vault">Inside</a>
+    <a href="#privacy">Privacy</a>
+    <a href="#keep">Pricing</a>
+  </nav>
+  <a class="btn btn-brass" href="https://github.com/" rel="noopener">Get it on Android</a>
+</header>
+
+<main id="top">
+
+  <!-- ══════════ HERO ══════════ -->
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow reveal">Warranty &amp; receipt vault · offline-first · Android</p>
+      <h1 class="reveal">
+        <span class="l1">The refund you forgot</span>
+        <span class="l2">is <em>money</em> you lost.</span>
+      </h1>
+      <p class="lede reveal">Snap a receipt. Warden reads it <strong>on your device</strong>, watches both clocks — return window <em>and</em> warranty — and knocks before either door closes.</p>
+      <div class="cta-row reveal">
+        <a class="btn btn-brass" href="https://github.com/" rel="noopener">Get it on Android</a>
+        <a class="btn btn-ghost" href="https://github.com/" rel="noopener">Read the source ↗</a>
+      </div>
+      <p class="hero-foot reveal">Free for 5 items · Pro is a one-time coin, not a subscription</p>
+    </div>
+
+    <div class="stage" id="stage">
+      <div class="receipt" id="receipt">
+        <div class="perf perf-top"></div>
+        <div class="r-body">
+          <p class="r-store" data-scan>HARBOR &amp; CO. ELECTRONICS</p>
+          <p class="r-dim" data-scan>124 DOCKYARD LANE — TILL 04</p>
+          <p class="r-rule">· · · · · · · · · · · · · · · · · · · ·</p>
+          <p data-scan><span>ANC HEADPHONES X3</span><span>149.00</span></p>
+          <p data-scan><span>USB-C CABLE 2M</span><span>12.50</span></p>
+          <p data-scan><span>EXT. WARRANTY 24MO</span><span>19.00</span></p>
+          <p class="r-rule">· · · · · · · · · · · · · · · · · · · ·</p>
+          <p class="r-total" data-scan><span>TOTAL</span><span>180.50</span></p>
+          <p class="r-dim" data-scan>2026-07-13&nbsp;&nbsp;14:32&nbsp;&nbsp;CARD ····8841</p>
+          <p class="r-dim r-thanks" data-scan>RETURNS WITHIN 30 DAYS W/ RECEIPT</p>
+        </div>
+        <div class="perf perf-bottom"></div>
+        <div class="scanbeam" id="scanbeam"></div>
+      </div>
+
+      <div class="chip chip-1" data-chip><i>MERCHANT</i>Harbor &amp; Co.</div>
+      <div class="chip chip-2" data-chip><i>DATE</i>13 Jul 2026</div>
+      <div class="chip chip-3" data-chip><i>TOTAL</i>180.50</div>
+      <div class="chip chip-4 chip-alarm" data-chip><i>RETURN BY</i>12 Aug 2026</div>
+      <div class="chip chip-5 chip-brass" data-chip><i>WARRANTY</i>13 Jul 2028</div>
+      <p class="stage-note" data-chip>read in 0.4s · nothing left your phone</p>
+    </div>
+  </section>
+
+  <!-- ══════════ MARQUEE ══════════ -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>NO CLOUD ✕ NO ACCOUNT ✕ NO ANALYTICS ✕ 100% ON-DEVICE OCR ✕ YOUR DATA IS PORTABLE ✕&nbsp;</span>
+      <span>NO CLOUD ✕ NO ACCOUNT ✕ NO ANALYTICS ✕ 100% ON-DEVICE OCR ✕ YOUR DATA IS PORTABLE ✕&nbsp;</span>
+    </div>
+  </div>
+
+  <!-- ══════════ TWO CLOCKS ══════════ -->
+  <section class="clocks" id="clocks">
+    <div class="clocks-copy">
+      <p class="eyebrow reveal">The two clocks</p>
+      <h2 class="reveal">Every purchase runs on <em>two timers.</em><br/>Most trackers watch one.</h2>
+      <p class="body reveal">The return window slams shut in days. The warranty bleeds out over years. Warden winds both the moment a receipt lands in the vault — and 30 days before a warranty dies, it tells you to <strong>test the product while a claim is still possible.</strong></p>
+      <ul class="clock-legend reveal">
+        <li><span class="dot dot-alarm"></span><b>Return window</b><span class="mono">7 / 15 / 30 days · custom</span></li>
+        <li><span class="dot dot-brass"></span><b>Warranty</b><span class="mono">6 mo / 1 yr / 2 yr · custom</span></li>
+        <li><span class="dot dot-paper"></span><b>Test-before-expiry nudge</b><span class="mono">T-minus 30 days</span></li>
+      </ul>
+    </div>
+    <div class="dial-wrap reveal" id="dialwrap">
+      <svg class="dial" viewBox="0 0 400 400">
+        <g class="ticks" id="ticks"></g>
+        <circle class="track" cx="200" cy="200" r="150"/>
+        <circle class="track" cx="200" cy="200" r="112"/>
+        <circle id="arc-warranty" class="arc arc-brass" cx="200" cy="200" r="150"/>
+        <circle id="arc-return" class="arc arc-alarm" cx="200" cy="200" r="112"/>
+        <text x="200" y="188" class="dial-num" id="dialnum">0</text>
+        <text x="200" y="216" class="dial-label">DAYS STILL COVERED</text>
+        <text x="200" y="238" class="dial-sub">₩ VALUE PROTECTED · 180.50</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ══════════ VAULT / FEATURES ══════════ -->
+  <section class="vault" id="vault">
+    <p class="eyebrow reveal">Inside the vault</p>
+    <h2 class="reveal">Six mechanisms, <em>zero servers.</em></h2>
+    <div class="drawers">
+      <article class="drawer reveal"><span class="d-num">01</span>
+        <h3>On-device OCR</h3>
+        <p>Camera or gallery in — merchant, date and total out. ML Kit runs locally; the photo never travels.</p>
+      </article>
+      <article class="drawer reveal"><span class="d-num">02</span>
+        <h3>Test-before-expiry</h3>
+        <p>A nudge 30 days before warranty death: plug it in, stress it, claim it — while someone else still owes you.</p>
+      </article>
+      <article class="drawer reveal"><span class="d-num">03</span>
+        <h3>Claim pack</h3>
+        <p>One tap bundles the receipt image and purchase details into a share-ready dossier for the counter argument.</p>
+      </article>
+      <article class="drawer reveal"><span class="d-num">04</span>
+        <h3>Value protected</h3>
+        <p>The dashboard totals every unit of currency still under guard. Watch coverage, not just clutter.</p>
+      </article>
+      <article class="drawer reveal"><span class="d-num">05</span>
+        <h3>Biometric lock</h3>
+        <p>Optional fingerprint gate on the vault door. Your spending history is not a shared document.</p>
+      </article>
+      <article class="drawer reveal"><span class="d-num">06</span>
+        <h3>Portable by design</h3>
+        <p>JSON backup export and import over the share sheet. Leave whenever you like — with everything.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ══════════ PRIVACY MANIFESTO ══════════ -->
+  <section class="privacy" id="privacy">
+    <div class="privacy-inner">
+      <p class="eyebrow eyebrow-dark reveal">The quiet part, loud</p>
+      <h2 class="reveal">Your purchases are <span class="redact"><span>nobody's</span></span> business.</h2>
+      <p class="body reveal">Warden makes <strong>zero network calls</strong> in any core flow. Receipts, items and reminders live in a local SQLite database inside app-private storage. There is no account to create, no telemetry to opt out of, no cloud to breach. The vault is the phone in your pocket.</p>
+      <p class="sig reveal">— the entire privacy policy, more or less</p>
+    </div>
+  </section>
+
+  <!-- ══════════ PRICING ══════════ -->
+  <section class="keep" id="keep">
+    <p class="eyebrow reveal">Keep it · keep everything</p>
+    <h2 class="reveal">One tier is free. The other is <em>a coin, once.</em></h2>
+    <div class="stubs">
+      <article class="stub reveal">
+        <h3 class="mono">FREE</h3>
+        <p class="price">0<span>.00</span></p>
+        <ul class="mono">
+          <li>5 tracked items</li>
+          <li>on-device OCR</li>
+          <li>both clocks + reminders</li>
+          <li>search &amp; filter</li>
+          <li>JSON export / import</li>
+        </ul>
+        <p class="stub-foot mono">*** NO CARD · NO ACCOUNT ***</p>
+      </article>
+      <article class="stub stub-pro reveal">
+        <div class="seal"><span>PRO</span></div>
+        <h3 class="mono">PRO · ONE-TIME</h3>
+        <p class="price">once<span>&nbsp;· never monthly</span></p>
+        <ul class="mono">
+          <li>unlimited items</li>
+          <li>claim pack export</li>
+          <li>custom reminder timing</li>
+          <li>everything in Free</li>
+          <li>a warm feeling of order</li>
+        </ul>
+        <p class="stub-foot mono">*** THANK YOU · COME AGAIN ***</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ══════════ FOOT ══════════ -->
+  <footer class="foot">
+    <p class="mono">WARDEN · WARRANTY &amp; RECEIPT VAULT · MIT LICENSE</p>
+    <p class="mono dim">Expo SDK 56 · React Native 0.85 · ML Kit · SQLite — built offline-first, reviewed in daylight.</p>
+  </footer>
+
+</main>
+<script src="scripts/ink.js"></script>
+<script src="scripts/main.js"></script>
+</body>
+</html>

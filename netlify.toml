@@ -1,0 +1,5 @@
+# Static marketing site lives in /site — no build step.
+# Prevents Netlify's auto-detected `expo export -p web` command from running.
+[build]
+  publish = "site"
+  command = "echo 'static site — no build'"
