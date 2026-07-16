@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     color: paper.ink,
   },
-  chipTextActive: { color: '#fff', fontWeight: '700' },
+  chipTextActive: { color: paper.bg, fontWeight: '700' },
   save: {
     backgroundColor: paper.accent,
     borderRadius: 3,
@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
   saveDisabled: { opacity: 0.4 },
   saveText: {
     fontFamily: mono,
-    color: '#fff',
+    color: paper.bg,
     fontWeight: '700',
     fontSize: 13,
     letterSpacing: 2,

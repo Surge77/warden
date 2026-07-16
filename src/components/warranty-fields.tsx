@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     color: paper.ink,
   },
-  chipTextActive: { color: '#fff', fontWeight: '700' },
+  chipTextActive: { color: paper.bg, fontWeight: '700' },
   customInput: {
     fontFamily: mono,
     borderWidth: 1.5,

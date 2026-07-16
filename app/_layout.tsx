@@ -42,7 +42,7 @@ export default function RootLayout() {
 
   return (
     <LockGate>
-      <StatusBar style="dark" />
+      <StatusBar style="light" />
       <Stack
         screenOptions={{
           headerStyle: { backgroundColor: paper.bg },

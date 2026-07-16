@@ -1,19 +1,20 @@
 import { Platform } from 'react-native';
 
-// Thermal-receipt design language: warm paper, printer-ink mono type,
-// vermillion stamp accent, dashed tear-lines. All screens share these tokens.
+// Horological-vault design language: deep ink-green walls, pine ledger
+// cards, aged-brass accents, cream printer ink. Receipts read like paper
+// filed in a dark bank vault. All screens share these tokens.
 export const paper = {
-  bg: '#F4EEE1',
-  card: '#FFFDF6',
-  cardShadow: '#D8CFBC',
-  ink: '#221F1A',
-  inkFaded: '#8A8171',
-  inkFaint: '#C9C0AC',
-  accent: '#D9482B',
-  accentSoft: '#F6DCD4',
-  success: '#3F6C45',
-  danger: '#B3261E',
-  dangerSoft: '#F3D9D6',
+  bg: '#0B1611',
+  card: '#152420',
+  cardShadow: '#040806',
+  ink: '#EDE5CF',
+  inkFaded: '#8FA391',
+  inkFaint: '#31453A',
+  accent: '#C9A96A',
+  accentSoft: '#2B2A1C',
+  success: '#8CBB94',
+  danger: '#E0552E',
+  dangerSoft: '#3B1D14',
 } as const;
 
 export const mono = Platform.select({ android: 'monospace', ios: 'Menlo', default: 'monospace' });

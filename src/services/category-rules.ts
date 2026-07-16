@@ -1,12 +1,12 @@
 export const DEFAULT_CATEGORIES = [
-  { name: 'Food', color: '#EF4444' },
-  { name: 'Groceries', color: '#22C55E' },
-  { name: 'Transport', color: '#3B82F6' },
-  { name: 'Shopping', color: '#A855F7' },
-  { name: 'Health', color: '#14B8A6' },
-  { name: 'Bills', color: '#F59E0B' },
-  { name: 'Entertainment', color: '#EC4899' },
-  { name: 'Other', color: '#6B7280' },
+  { name: 'Food', color: '#E0552E' },
+  { name: 'Groceries', color: '#8CBB94' },
+  { name: 'Transport', color: '#7DA7D9' },
+  { name: 'Shopping', color: '#B08BC9' },
+  { name: 'Health', color: '#5FB0A5' },
+  { name: 'Bills', color: '#C9A96A' },
+  { name: 'Entertainment', color: '#D98BA6' },
+  { name: 'Other', color: '#8FA391' },
 ] as const;
 
 export const FALLBACK_CATEGORY = 'Other';

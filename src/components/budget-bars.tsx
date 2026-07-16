@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   fill: { height: '100%', backgroundColor: paper.success },
-  fillWarn: { backgroundColor: '#C98A0B' },
+  fillWarn: { backgroundColor: '#D9903F' },
   fillOver: { backgroundColor: paper.danger },
   pct: { fontFamily: mono, fontSize: 11, fontWeight: '700', color: paper.ink, minWidth: 44, textAlign: 'right' },
   pctOver: { color: paper.danger },

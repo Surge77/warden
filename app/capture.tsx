@@ -82,7 +82,7 @@ export default function CaptureScreen() {
         accessibilityRole="button"
         accessibilityLabel="Pick receipt from gallery"
       >
-        <Text style={styles.buttonText}>Pick from gallery</Text>
+        <Text style={[styles.buttonText, styles.buttonTextSecondary]}>Pick from gallery</Text>
       </Pressable>
     </View>
   );
@@ -93,7 +93,7 @@ function Centered({ children }: { children: React.ReactNode }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: paper.ink },
+  container: { flex: 1, backgroundColor: paper.bg },
   centered: {
     flex: 1,
     alignItems: 'center',
@@ -112,11 +112,12 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     alignItems: 'center',
   },
-  buttonSecondary: { backgroundColor: 'transparent', borderWidth: 1.5, borderColor: paper.card, marginBottom: 16 },
+  buttonSecondary: { backgroundColor: 'transparent', borderWidth: 1.5, borderColor: paper.inkFaint, marginBottom: 16 },
   buttonDisabled: { opacity: 0.5 },
+  buttonTextSecondary: { color: paper.ink },
   buttonText: {
     fontFamily: mono,
-    color: '#fff',
+    color: paper.bg,
     fontWeight: '700',
     fontSize: 13,
     letterSpacing: 2,

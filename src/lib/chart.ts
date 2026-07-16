@@ -1,6 +1,6 @@
 import type { Category, CategoryTotal } from '@/types';
 
-export const FALLBACK_SLICE_COLOR = '#6B7280';
+export const FALLBACK_SLICE_COLOR = '#8FA391';
 
 export interface PieSlice {
   value: number; // minor units; only relative size matters to the chart

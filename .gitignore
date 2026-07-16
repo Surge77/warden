@@ -50,3 +50,6 @@ Thumbs.db
 
 # Crash dumps
 *.stackdump
+
+# Local Netlify folder
+.netlify

@@ -1,0 +1,127 @@
+/* ── two clocks ───────────────────────────────────────────── */
+.clocks{
+  display:grid;grid-template-columns:1.05fr .95fr;gap:3rem;align-items:center;
+  padding:7rem clamp(1.2rem,5vw,4.5rem);
+}
+.clocks h2{color:var(--paper);margin-bottom:1.4rem}
+.clock-legend{list-style:none;margin-top:2rem;display:grid;gap:.9rem}
+.clock-legend li{display:flex;align-items:baseline;gap:.8rem;font-size:1rem}
+.clock-legend b{font-weight:520;color:var(--paper)}
+.clock-legend .mono{color:var(--text-dim);margin-left:auto}
+.dot{width:10px;height:10px;border-radius:50%;flex:none;align-self:center}
+.dot-alarm{background:var(--alarm);box-shadow:0 0 12px #e0552e88}
+.dot-brass{background:var(--brass);box-shadow:0 0 12px #c9a96a88}
+.dot-paper{background:var(--paper-dim)}
+
+.dial-wrap{display:grid;place-items:center}
+.dial{width:min(440px,88%);overflow:visible}
+.ticks line{stroke:var(--moss);stroke-width:1.5}
+.ticks line.maj{stroke:var(--brass);opacity:.75}
+.track{fill:none;stroke:var(--pine);stroke-width:10}
+.arc{
+  fill:none;stroke-width:10;stroke-linecap:round;
+  transform:rotate(-90deg);transform-origin:200px 200px;
+  transition:stroke-dashoffset 2.2s cubic-bezier(.3,0,.2,1);
+}
+.arc-brass{stroke:var(--brass);filter:drop-shadow(0 0 8px #c9a96a55)}
+.arc-alarm{stroke:var(--alarm);filter:drop-shadow(0 0 8px #e0552e55);transition-delay:.35s}
+.dial-num{
+  fill:var(--paper);font-family:var(--serif);font-size:64px;font-weight:560;
+  text-anchor:middle;letter-spacing:-.02em;
+}
+.dial-label{fill:var(--text-dim);font-family:var(--mono);font-size:10px;letter-spacing:.34em;text-anchor:middle}
+.dial-sub{fill:var(--brass);font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-anchor:middle}
+
+/* ── vault drawers ────────────────────────────────────────── */
+.vault{padding:6.5rem clamp(1.2rem,5vw,4.5rem)}
+.vault h2{color:var(--paper);margin-bottom:3rem}
+.drawers{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--moss);border:1px solid var(--moss)}
+.drawer{
+  position:relative;background:var(--ink);padding:2.2rem 1.8rem 2.4rem;
+  overflow:hidden;transition:background .4s;
+}
+.drawer::before{ /* brass corner */
+  content:"";position:absolute;top:0;right:0;width:26px;height:26px;
+  background:linear-gradient(225deg,var(--brass) 0 8px,transparent 8px);
+  opacity:0;transition:opacity .4s;
+}
+.drawer::after{ /* drawer slide sheen */
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(115deg,transparent 30%,#c9a96a14 50%,transparent 70%);
+  transform:translateX(-110%);transition:transform .7s cubic-bezier(.2,.7,.2,1);
+}
+.drawer:hover{background:var(--pine)}
+.drawer:hover::before{opacity:1}
+.drawer:hover::after{transform:translateX(110%)}
+.drawer:hover .d-num{color:var(--brass-hi)}
+.d-num{font-family:var(--mono);font-size:.72rem;letter-spacing:.3em;color:var(--brass);transition:color .3s}
+.drawer h3{font-size:1.35rem;font-weight:540;margin:.9rem 0 .7rem;color:var(--paper)}
+.drawer h3::after{content:"";display:block;width:2.2rem;height:1px;background:var(--moss);margin-top:.7rem}
+.drawer p{font-family:var(--news);font-style:italic;font-weight:340;line-height:1.6;color:var(--text-dim);font-size:1rem}
+.drawers .reveal{transition-delay:calc(var(--i,0)*80ms)}
+.drawer:nth-child(1){--i:0}.drawer:nth-child(2){--i:1}.drawer:nth-child(3){--i:2}
+.drawer:nth-child(4){--i:3}.drawer:nth-child(5){--i:4}.drawer:nth-child(6){--i:5}
+
+/* ── privacy manifesto (paper flip) ───────────────────────── */
+.privacy{
+  background:
+    repeating-linear-gradient(0deg,transparent 0 30px,#0000000a 30px 31px),
+    linear-gradient(170deg,#fbf6e8,var(--paper) 45%,var(--paper-dim));
+  color:#1c241b;padding:8rem clamp(1.2rem,6vw,6rem);
+  clip-path:polygon(0 3.2vw,100% 0,100% 100%,0 100%);
+}
+.privacy-inner{max-width:900px;margin:0 auto}
+.eyebrow-dark{color:#8a6d35}
+.privacy h2{color:#141b12;font-size:clamp(2.2rem,5.4vw,4.2rem);margin-bottom:1.8rem}
+.privacy .body{color:#4a5344;max-width:60ch}
+.privacy .body strong{color:#141b12}
+.sig{font-family:var(--news);font-style:italic;color:#8a6d35;margin-top:1.6rem}
+.redact{position:relative;white-space:nowrap}
+.redact span{transition:color .5s .9s}
+.redact::after{
+  content:"";position:absolute;inset:-2% -3%;background:#141b12;
+  transform:scaleX(1);transform-origin:left;transition:transform .8s cubic-bezier(.6,0,.2,1) .4s;
+}
+.privacy h2.in .redact::after{transform:scaleX(0);transform-origin:right}
+.privacy h2:not(.in) .redact span{color:transparent}
+
+/* ── pricing stubs ────────────────────────────────────────── */
+.keep{padding:7rem clamp(1.2rem,5vw,4.5rem) 8rem;text-align:center}
+.keep h2{color:var(--paper);margin-bottom:3.4rem}
+.stubs{display:flex;gap:2.6rem;justify-content:center;flex-wrap:wrap}
+.stub{
+  position:relative;width:300px;padding:2.4rem 1.8rem 2rem;text-align:left;
+  background:
+    repeating-linear-gradient(0deg,transparent 0 24px,#00000007 24px 25px),
+    linear-gradient(175deg,#fdf9ec,var(--paper) 40%,var(--paper-dim));
+  color:#20281f;transform:rotate(-1.2deg);
+  box-shadow:0 24px 50px -16px #000000b0;
+  transition:transform .4s cubic-bezier(.2,.7,.2,1);
+  -webkit-mask:radial-gradient(circle at 8px 100%,transparent 5px,#000 5.5px) repeat-x bottom/16px 100%;
+          mask:radial-gradient(circle at 8px 100%,transparent 5px,#000 5.5px) repeat-x bottom/16px 100%;
+}
+.stub-pro{transform:rotate(1.4deg)}
+.stub:hover{transform:rotate(0) translateY(-8px)}
+.stub h3{font-size:.8rem;letter-spacing:.26em;color:#6d7566}
+.price{font-family:var(--serif);font-size:3.4rem;font-weight:560;line-height:1.1;margin:.5rem 0 1.2rem}
+.price span{font-size:1rem;color:#6d7566;font-family:var(--mono);letter-spacing:.06em}
+.stub ul{list-style:none;display:grid;gap:.55rem;border-top:1px dashed #a9a58f;padding-top:1.1rem}
+.stub ul li::before{content:"— ";color:#8a6d35}
+.stub-foot{text-align:center;margin-top:1.6rem;color:#a9a58f;letter-spacing:.12em}
+.seal{
+  position:absolute;top:-26px;right:-26px;width:88px;height:88px;border-radius:50%;
+  display:grid;place-items:center;transform:rotate(12deg);
+  background:radial-gradient(circle at 35% 30%,#d05a40,#a02f22 60%,#7c1f16);
+  box-shadow:0 10px 24px -6px #00000090,inset 0 2px 6px #ffffff40,inset 0 -4px 10px #00000060;
+}
+.seal span{
+  font-family:var(--mono);font-size:.8rem;letter-spacing:.2em;color:#f6d9c8;
+  border:1.5px solid #f6d9c880;border-radius:50%;width:62px;height:62px;
+  display:grid;place-items:center;
+}
+
+@media(max-width:920px){
+  .clocks{grid-template-columns:1fr}
+  .drawers{grid-template-columns:1fr}
+}
+@media(min-width:921px) and (max-width:1180px){.drawers{grid-template-columns:repeat(2,1fr)}}
